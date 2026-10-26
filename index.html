@@ -1,0 +1,134 @@
+<title>nLPD en clair</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700;800&display=swap">
+<style>
+/* Concept : fiche administrative suisse, sobre, une seule colonne, rouge réservé à l'action */
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --fg: #14202e;
+  --muted: #55657a;
+  --line: #d5dce5;
+  --ink: #0f2a47;
+  --accent: #c8102e;
+  --accent-fg: #ffffff;
+  --note: #e8eef6;
+  --font-display: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1622; --surface: #132133; --fg: #e8eef6; --muted: #9db0c6;
+    --line: #26394f; --ink: #9cc2ee; --accent: #ff4d63; --accent-fg: #14050a; --note: #172a40;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1622; --surface: #132133; --fg: #e8eef6; --muted: #9db0c6;
+  --line: #26394f; --ink: #9cc2ee; --accent: #ff4d63; --accent-fg: #14050a; --note: #172a40;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.wrap { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px; }
+.tag { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(32px, 7vw, 46px); line-height: 1.08; margin: 10px 0 14px; color: var(--ink); text-wrap: balance; letter-spacing: -.01em; }
+h2 { font-weight: 700; font-size: 21px; margin: 0 0 10px; color: var(--ink); text-wrap: balance; }
+p { margin: 0 0 10px; }
+.lead { font-size: 19px; color: var(--fg); }
+.status { display: inline-block; font-family: var(--font-mono); font-size: 12px; border: 1px solid var(--line); background: var(--surface); padding: 3px 9px; border-radius: 4px; color: var(--muted); }
+.fact { background: var(--note); border-left: 4px solid var(--ink); padding: 14px 16px; border-radius: 0 6px 6px 0; }
+.fact p:last-child { margin-bottom: 0; }
+.fact a { color: var(--ink); }
+.list { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 4px 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.row b { font-family: var(--font-mono); font-weight: 500; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; padding-top: 3px; }
+@media (max-width: 480px) { .row { grid-template-columns: minmax(0, 1fr); } }
+form { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+label { font-weight: 500; font-size: 15px; display: block; margin-bottom: 5px; }
+.hint { font-weight: 400; color: var(--muted); }
+input[type=email], textarea {
+  width: 100%; font: inherit; color: var(--fg); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 6px; padding: 11px 12px;
+}
+textarea { min-height: 84px; resize: vertical; }
+input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+button {
+  font: inherit; font-weight: 700; background: var(--accent); color: var(--accent-fg);
+  border: 0; border-radius: 6px; padding: 13px 18px; cursor: pointer;
+}
+button[disabled] { opacity: .6; cursor: default; }
+.msg { margin: 0; font-size: 15px; min-height: 1.4em; }
+.msg.ok { color: var(--ink); font-weight: 500; }
+.msg.err { color: var(--accent); }
+.small { font-size: 14px; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { button { transition: filter .15s; } button:hover:not([disabled]) { filter: brightness(1.08); } }
+</style>
+
+<main class="wrap">
+  <header>
+    <span class="status">En préparation · phase de test</span>
+    <h1>La nLPD, expliquée pour votre PME, dans l'ordre.</h1>
+    <p class="lead">Un outil guidé en français pour les petites entreprises suisses : quelques questions simples, puis la liste de ce que vous devez faire et des modèles de base.</p>
+  </header>
+
+  <section class="fact" aria-labelledby="f">
+    <h2 id="f">Bonne nouvelle, et ce qui reste à faire</h2>
+    <p>Une entreprise de moins de 250 collaborateurs n'a en général pas à tenir de registre des activités de traitement. Deux exceptions : un grand volume de données sensibles, ou un profilage à haut risque (art. 24 de l'ordonnance sur la protection des données).</p>
+    <p>Le registre mis à part, d'autres obligations de la loi restent à connaître : informer les personnes concernées, protéger les données, signaler certaines violations de données. Beaucoup de dirigeants de PME ne savent pas lesquelles les concernent.</p>
+    <p class="small">Source : <a href="https://prighter.com/resources/laws/swiss-fadp/dpo/articles/article-24" rel="noopener">texte de l'article 24 OPDo</a>. Information générale, pas un conseil juridique.</p>
+  </section>
+
+  <section aria-labelledby="p">
+    <h2 id="p">Ce que nous préparons</h2>
+    <div class="list">
+      <div class="row"><b>Questionnaire</b><span>Environ 10 minutes. Vous décrivez votre activité : clients, site web, outils, employés.</span></div>
+      <div class="row"><b>Votre liste</b><span>Les obligations qui vous concernent vraiment, classées par priorité, sans jargon.</span></div>
+      <div class="row"><b>Modèles</b><span>Une politique de confidentialité et une clause pour vos sous-traitants, à adapter.</span></div>
+    </div>
+    <p class="small" style="margin-top:12px">Rien de cela n'existe encore. Votre réponse nous dit si cela vaut la peine de le construire.</p>
+  </section>
+
+  <section aria-labelledby="r">
+    <h2 id="r">Être prévenu au lancement</h2>
+    <form id="wl" action="https://formspree.io/f/myeenqp" method="POST" accept-charset="utf-8">
+      <input type="hidden" name="_subject" value="Inscription nLPD en clair">
+      <div>
+        <label for="email">Adresse e-mail</label>
+        <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="prenom@entreprise.ch">
+      </div>
+      <div>
+        <label for="q">Votre question n°1 sur la nLPD <span class="hint">(facultatif)</span></label>
+        <textarea id="q" name="question" maxlength="500"></textarea>
+      </div>
+      <button id="go" type="submit">Me prévenir</button>
+      <p id="msg" class="msg" role="status" aria-live="polite"></p>
+      <p class="small">Gratuit, sans engagement. Nous gardons votre adresse uniquement pour vous prévenir du lancement. Pour la faire effacer, répondez à notre message.</p>
+    </form>
+  </section>
+
+  <footer class="small">
+    nLPD en clair est un projet en test. Il ne remplace pas l'avis d'un juriste ou du Préposé fédéral à la protection des données et à la transparence.
+  </footer>
+</main>
+
+<script>
+(function () {
+  var f = document.getElementById("wl"), msg = document.getElementById("msg");
+  f.addEventListener("submit", function (e) {
+    var email = document.getElementById("email").value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      e.preventDefault();
+      msg.textContent = "Cette adresse e-mail ne semble pas valide. Vérifiez-la et réessayez.";
+      msg.className = "msg err";
+    }
+  });
+})();
+</script>
